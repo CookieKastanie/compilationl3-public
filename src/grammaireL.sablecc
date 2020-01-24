@@ -3,17 +3,186 @@ Package sc;
 Helpers
 
 lettre = [['a' .. 'z'] + ['A' .. 'Z']];
+chiffre = ['0' .. '9'];
 
 Tokens
 
+ident = lettre (lettre | chiffre)*;
+const = chiffre+;
+entier = 'entier';
+lire = 'lire()';
+ecrire = 'ecrire';
+ou = '|';
+et = '&';
+non = '!';
+egale = '=';
+inf = '<';
+plus = '+';
+moins = '-';
+mult = '*';
+div = '/';
+po = '(';
+pf = ')';
+ao = '{';
+af = '}';
+co = '[';
+cf = ']';
+virg = ',';
+pv = ';';
+
+si = 'si';
+sinon = 'sinon';
+alors = 'alors';
+tantque = 'tantque';
+faire = 'faire';
+retour = 'retour';
+
 espaces = (' ' | 13 | 10)+;
-commentaire= '#' [[0 .. 0xffff] - [10 + 13]]* (10 | 13 | 10 13);
+commentaire = '#' [[0 .. 0xffff] - [10 + 13]]* (10 | 13 | 10 13);
 
 Ignored Tokens
-
 espaces, commentaire;
+
+
+
 
 Productions
 
-programme = optdecvar listedecfonc ;
+
+
+
+exp =
+    {ou} exp ou exp1 |
+    {to_exp1} exp1;
+
+exp1 =
+    {et} exp1 et exp2 |
+    {to_exp2} exp2;
+
+exp2 =
+    {egale} exp2 egale exp3 |
+    {inf} exp2 inf exp3 |
+    {to_exp3} exp3;
+
+exp3 =
+    {plus} exp3 plus exp4 |
+    {moins} exp3 moins exp4 |
+    {to_exp4} exp4;
+
+exp4 =
+    {mult} exp4 mult exp5 |
+    {div} exp4 div exp5 |
+    {to_exp5} exp5;
+
+exp5 =
+    {non} non exp5 |
+    {to_exp6} exp6;
+
+exp6 =
+    {exp_par} po exp pf |
+    {const} const |
+    {fonc} fonc |
+    {var} var |
+    {lire} lire;
+
+
+
+
+var =
+    {ident_var} ident |
+    {ident_tab} ident co exp cf;
+
+
+
+
+fonc =
+    {fonc} ident po args pf;
+
+args =
+    {args} exp arg |
+    {no_args} ;
+arg =
+    {arg} virg exp arg |
+    {no_arg} ;
+
+
+
+
+
+i_aff =
+    {aff} ident egale exp pv;
+
+i_si =
+    {si} si po exp pf alors bloc i_sinon;
+
+i_sinon =
+    {sinon} sinon bloc |
+    {no_sinon} ;
+
+i_tantque =
+    {tantque} tantque po exp pf faire bloc;
+
+i_retour =
+    {retour} retour exp pv;
+
+i_fonc =
+    {app_fonc} fonc pv |
+    {app_lire} lire pv;
+
+i_ecrire =
+    {app_ecrire} ecrire po exp pf pv;
+
+inst =
+    {si} i_si |
+    {tantque} i_tantque |
+    {aff} i_aff |
+    {retour} i_retour |
+    {fonc} i_fonc |
+    {ecrire} i_ecrire;
+
+
+inst_list =
+    {inst} inst inst_list |
+    {no_inst} ;
+
+bloc =
+    {block} ao inst_list af;
+
+
+
+
+
+dec_list_var =
+    {var} dec_var |
+    {list_var} virg dec_var dec_list_var |
+    {no_var} ;
+
+dec_var =
+    {entier} entier ident |
+    {tab} entier ident co const cf;
+
+
+
+
+dec_list_fonc =
+    {fonc} dec_fonc |
+    {list_fonc} dec_fonc dec_list_fonc |
+    {no_fonc} ;
+
+dec_list_fonc_option =
+    {dec_list_fonc_option}  dec_list_var pv |
+    {no_dec_list_fonc_option} ;
+
+dec_fonc =
+    {dec_fonc} ident po dec_list_var pf dec_list_fonc_option bloc;
+
+
+
+
+dec_var_glob =
+    {var_glob} dec_list_var pv;
+
+
+programme =
+    {programme} dec_var_glob dec_fonc dec_list_fonc;
 

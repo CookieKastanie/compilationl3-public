@@ -55,16 +55,21 @@ Productions
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-program =
-    {with_var} dec_l_var pv dec_l_func |
-    {no_var} dec_l_func |;
+programme =
+    {programme} dec_var_glob dec_list_fonc;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-dec_l_var =
-    {var} dec_var dec_l_var |
-    {list_var} virg dec_var dec_l_var |
+dec_var_glob =
+    {var_glob} dec_list_var pv |
+    {no_var_glob} ;
+
+
+
+dec_list_var =
+    {var} dec_var dec_list_var |
+    {list_var} virg dec_var dec_list_var |
     {no_var} ;
 
 dec_var =
@@ -77,25 +82,30 @@ dec_var =
 
 
 
-dec_l_func =
-    {func} dec_func dec_l_func |
-    {no_func} ;
+dec_list_fonc =
+    {list_fonc} dec_fonc dec_list_fonc |
+    {no_fonc} ;
 
-dec_func =
-    {with_var} ident po [args]: dec_l_var pf [vars]: dec_l_var pv bloc |
-    {no_var} ident po dec_l_var pf bloc;
+dec_fonc =
+    {dec_fonc} ident po dec_list_var pf dec_list_fonc_option bloc;
 
+dec_list_fonc_option =
+    {dec_list_fonc_option} dec_list_var pv |
+    {no_dec_list_fonc_option} ;
 
-///////////////////////////////////////////////////////////////////////////////////////////
-
-
-bloc = ao l_inst af;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-l_inst =
-    {inst} inst l_inst |
+
+bloc =
+    {block} ao inst_list af;
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+inst_list =
+    {inst} inst inst_list |
     {no_inst} ;
 
 inst =
@@ -103,46 +113,53 @@ inst =
     {tantque} i_tantque |
     {aff} i_aff |
     {retour} i_retour |
-    {func} i_func |
+    {fonc} i_fonc |
     {ecrire} i_ecrire;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-i_aff = var egale exp pv;
+i_aff =
+    {aff} var egale exp pv;
 
 i_si =
-    {with_sinon} si exp alors bloc |
-    {no_sinon} si exp alors bloc sinon bloc; ################################################################################################################################################
+    {si} si exp alors bloc i_sinon;
 
-i_tantque = tantque exp faire bloc;
+i_sinon =
+    {sinon} sinon bloc |
+    {no_sinon} ;
 
-i_retour = retour exp pv;
+i_tantque =
+    {tantque} tantque exp faire bloc;
 
-i_func =
-    {app_func} func pv |
+i_retour =
+    {retour} retour exp pv;
+
+i_fonc =
+    {app_fonc} fonc pv |
     {app_lire} lire po pf pv;
 
-i_ecrire = ecrire po exp pf pv;
+i_ecrire =
+    {app_ecrire} ecrire po exp pf pv;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
 var =
-    {entier} ident |
-    {tab_entier} ident co exp cf;
+    {ident_var} ident |
+    {ident_tab} ident co exp cf;
 
-func = ident po func_l_arg pf;
+fonc =
+    {fonc} ident po args pf;
 
-func_l_arg =
-    {arg} exp arg |
-    {no_arg} ;
-
+args =
+    {args} exp arg |
+    {no_args} ;
 arg =
-    {exp} virg exp arg |
-    {no_exp} ;
+    {arg} virg exp arg |
+    {no_arg} ;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -178,6 +195,6 @@ exp5 =
 exp6 =
     {exp_par} po exp pf |
     {const} const |
-    {func} func |
+    {fonc} fonc |
     {var} var |
     {lire} lire po pf;

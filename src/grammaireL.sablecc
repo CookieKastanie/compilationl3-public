@@ -57,7 +57,7 @@ Productions
 
 program =
     {with_var} dec_l_var pv dec_l_func |
-    {no_var} dec_l_func |;
+    {no_var} dec_l_func;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -114,7 +114,7 @@ i_aff = var egale exp pv;
 
 i_si =
     {with_sinon} si exp alors bloc |
-    {no_sinon} si exp alors bloc sinon bloc; ################################################################################################################################################
+    {no_sinon} si exp alors [si_bloc]: bloc sinon [sinon_bloc]: bloc;
 
 i_tantque = tantque exp faire bloc;
 

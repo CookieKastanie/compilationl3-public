@@ -53,7 +53,7 @@ espaces, commentaire;
 Productions
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-
+// A
 
 program =
     {with_var} dec_l_var pv dec_l_func |
@@ -61,21 +61,24 @@ program =
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
+// B
 
 dec_l_var =
-    {var} dec_var dec_l_var |
-    {list_var} virg dec_var dec_l_var |
+    {var} dec_var dec_l_var_b |
     {no_var} ;
+
+dec_l_var_b =
+    {var} virg dec_var dec_l_var_b |
+    {end} ;
 
 dec_var =
     {entier} entier ident |
     {tab} entier ident co const cf;
 
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////
-
-
-
+// C
 
 dec_l_func =
     {func} dec_func dec_l_func |
@@ -87,7 +90,7 @@ dec_func =
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-
+// D
 
 bloc = ao l_inst af;
 

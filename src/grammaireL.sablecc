@@ -102,6 +102,7 @@ l_inst =
     {no_inst} ;
 
 inst =
+    {bloc} bloc |
     {si} i_si |
     {tantque} i_tantque |
     {aff} i_aff |

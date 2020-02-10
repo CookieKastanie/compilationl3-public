@@ -6,7 +6,7 @@ import sc.node.*;
 
 import java.sql.SQLOutput;
 
-public class Sc2sa extends DepthFirstAdapter/* implements Analysis*/{
+public class Sc2sa extends DepthFirstAdapter /*implements Analysis*/{
     private SaNode returnValue;
 
     public SaNode getRoot() {
@@ -79,9 +79,6 @@ public class Sc2sa extends DepthFirstAdapter/* implements Analysis*/{
         SaDec decVar = null;
         SaLDec lDec = null;
 
-        if(node.getVirg() != null) {
-            node.getVirg().apply(this);
-        }
         if(node.getDecVar() != null) {
             node.getDecVar().apply(this);
             decVar = (SaDec) returnValue;
@@ -214,16 +211,31 @@ public class Sc2sa extends DepthFirstAdapter/* implements Analysis*/{
 
     @Override
     public void caseABloc(ABloc node) {
-        SaLInst // BRUH
+        SaLInst lInst = null;
 
         if(node.getLInst() != null) {
             node.getLInst().apply(this);
+            lInst = (SaLInst) returnValue;
         }
+
+        returnValue = new SaInstBloc(lInst);
     }
 
     @Override
     public void caseAInstLInst(AInstLInst node) {
+        SaInst inst = null;
+        SaLInst lInst = null;
 
+        if(node.getInst() != null) {
+            node.getInst().apply(this);
+            inst = (SaInst) returnValue;
+        }
+        if(node.getLInst() != null) {
+            node.getLInst().apply(this);
+            lInst = (SaLInst) returnValue;
+        }
+
+        returnValue = new SaLInst(inst, lInst);
     }
 
     @Override
@@ -232,358 +244,226 @@ public class Sc2sa extends DepthFirstAdapter/* implements Analysis*/{
     }
 
     @Override
-    public void caseASiInst(ASiInst node) {
+    public void caseABlocInst(ABlocInst node) {
+        SaInstBloc bloc = null;
 
+        if(node.getBloc() != null) {
+            node.getBloc().apply(this);
+            bloc = (SaInstBloc) returnValue;
+        }
+
+        returnValue = bloc;
+    }
+
+    @Override
+    public void caseASiInst(ASiInst node) {
+        returnValue = null;
     }
 
     @Override
     public void caseATantqueInst(ATantqueInst node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAAffInst(AAffInst node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseARetourInst(ARetourInst node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAFuncInst(AFuncInst node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAEcrireInst(AEcrireInst node) {
+        SaExp e = null;
 
+        if(node.getIEcrire() != null) {
+            node.getIEcrire().apply(this); ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            e = (SaExp) returnValue;
+        }
+        returnValue = new SaInstEcriture(e);
     }
 
     @Override
     public void caseAIAff(AIAff node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAWithSinonISi(AWithSinonISi node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseANoSinonISi(ANoSinonISi node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAITantque(AITantque node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAIRetour(AIRetour node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAAppFuncIFunc(AAppFuncIFunc node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAAppLireIFunc(AAppLireIFunc node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAIEcrire(AIEcrire node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAEntierVar(AEntierVar node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseATabEntierVar(ATabEntierVar node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAFunc(AFunc node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAArgFuncLArg(AArgFuncLArg node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseANoArgFuncLArg(ANoArgFuncLArg node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAExpArg(AExpArg node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseANoExpArg(ANoExpArg node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAOuExp(AOuExp node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAToExp1Exp(AToExp1Exp node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAEtExp1(AEtExp1 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAToExp2Exp1(AToExp2Exp1 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAEgaleExp2(AEgaleExp2 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAInfExp2(AInfExp2 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAToExp3Exp2(AToExp3Exp2 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAPlusExp3(APlusExp3 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAMoinsExp3(AMoinsExp3 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAToExp4Exp3(AToExp4Exp3 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAMultExp4(AMultExp4 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseADivExp4(ADivExp4 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAToExp5Exp4(AToExp5Exp4 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseANonExp5(ANonExp5 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAToExp6Exp5(AToExp6Exp5 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAExpParExp6(AExpParExp6 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAConstExp6(AConstExp6 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAFuncExp6(AFuncExp6 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseAVarExp6(AVarExp6 node) {
-
+        returnValue = null;
     }
 
     @Override
     public void caseALireExp6(ALireExp6 node) {
-
-    }
-
-    @Override
-    public void caseTEntier(TEntier node) {
-
-    }
-
-    @Override
-    public void caseTLire(TLire node) {
-
-    }
-
-    @Override
-    public void caseTEcrire(TEcrire node) {
-
-    }
-
-    @Override
-    public void caseTOu(TOu node) {
-
-    }
-
-    @Override
-    public void caseTEt(TEt node) {
-
-    }
-
-    @Override
-    public void caseTNon(TNon node) {
-
-    }
-
-    @Override
-    public void caseTEgale(TEgale node) {
-
-    }
-
-    @Override
-    public void caseTInf(TInf node) {
-
-    }
-
-    @Override
-    public void caseTPlus(TPlus node) {
-
-    }
-
-    @Override
-    public void caseTMoins(TMoins node) {
-
-    }
-
-    @Override
-    public void caseTMult(TMult node) {
-
-    }
-
-    @Override
-    public void caseTDiv(TDiv node) {
-
-    }
-
-    @Override
-    public void caseTPo(TPo node) {
-
-    }
-
-    @Override
-    public void caseTPf(TPf node) {
-
-    }
-
-    @Override
-    public void caseTAo(TAo node) {
-
-    }
-
-    @Override
-    public void caseTAf(TAf node) {
-
-    }
-
-    @Override
-    public void caseTCo(TCo node) {
-
-    }
-
-    @Override
-    public void caseTCf(TCf node) {
-
-    }
-
-    @Override
-    public void caseTVirg(TVirg node) {
-
-    }
-
-    @Override
-    public void caseTPv(TPv node) {
-
-    }
-
-    @Override
-    public void caseTSi(TSi node) {
-
-    }
-
-    @Override
-    public void caseTSinon(TSinon node) {
-
-    }
-
-    @Override
-    public void caseTAlors(TAlors node) {
-
-    }
-
-    @Override
-    public void caseTTantque(TTantque node) {
-
-    }
-
-    @Override
-    public void caseTFaire(TFaire node) {
-
-    }
-
-    @Override
-    public void caseTRetour(TRetour node) {
-
-    }
-
-    @Override
-    public void caseTEspaces(TEspaces node) {
-
-    }
-
-    @Override
-    public void caseTCommentaire(TCommentaire node) {
-
-    }
-
-    @Override
-    public void caseTConst(TConst node) {
-
-    }
-
-    @Override
-    public void caseTIdent(TIdent node) {
-
+        returnValue = null;
     }
 
     @Override

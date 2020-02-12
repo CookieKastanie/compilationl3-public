@@ -117,8 +117,8 @@ inst =
 i_aff = var egale exp pv;
 
 i_si =
-    {with_sinon} si exp alors bloc |
-    {no_sinon} si exp alors [si_bloc]: bloc sinon [sinon_bloc]: bloc;
+    {no_sinon} si exp alors bloc |
+    {with_sinon} si exp alors [si_bloc]: bloc sinon [sinon_bloc]: bloc;
 
 i_tantque = tantque exp faire bloc;
 

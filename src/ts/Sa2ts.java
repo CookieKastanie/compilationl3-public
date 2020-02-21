@@ -159,7 +159,8 @@ public class Sa2ts<T> extends SaDepthFirstVisitor<T> {
         TsItemFct gFunc = tableLocal.getFct(node.getNom());
         TsItemFct lFunc = tableGlobal.getFct(node.getNom());
 
-        if((gFunc == null || gFunc.getNbArgs() != node.getArguments().length()) && (lFunc == null || lFunc.getNbArgs() != node.getArguments().length())) {
+        final int argLength = node.getArguments() != null ? node.getArguments().length() : 0;
+        if((gFunc == null || gFunc.getNbArgs() != argLength) && (lFunc == null || lFunc.getNbArgs() != argLength)) {
             System.out.println("ERREUR FUNC");
             System.exit(1);
         }

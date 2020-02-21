@@ -4,7 +4,7 @@ import sc.node.*;
 import java.io.*;
 import sa.*;
 import ts.*;
-//import c3a.*;
+import c3a.*;
 //import nasm.*;
 //import fg.*;
 
@@ -44,11 +44,11 @@ public class Compiler
 	    System.out.println("[TABLE SYMBOLES]");
 	    Ts table = new Sa2ts(saRoot).getTableGlobale();
 	    table.afficheTout(baseName);
-/*
+
 	    System.out.println("[C3A]");
 	    C3a c3a = new Sa2c3a(saRoot, table).getC3a();
 	    c3a.affiche(baseName);
-
+/*
 	    System.out.println("[NASM]");
 	    Nasm nasm = new C3a2nasm(c3a, table).getNasm();
 	    nasm.affiche(baseName);

@@ -7,6 +7,11 @@ public class C3a2nasm implements C3aVisitor<NasmOperand> {
     private final NasmRegister REG_EBP = new NasmRegister(Nasm.REG_EBP);
     private final NasmRegister REG_ESP = new NasmRegister(Nasm.REG_ESP);
 
+
+    private final NasmRegister REG_EAX = new NasmRegister(Nasm.REG_EAX);
+    private final NasmRegister REG_EBX = new NasmRegister(Nasm.REG_EBX);
+
+
     private final int INT_SIZE = 4;
 
     private C3a c3a;
@@ -19,6 +24,20 @@ public class C3a2nasm implements C3aVisitor<NasmOperand> {
         this.c3a = c3a;
         this.table = table;
         this.nasm = new Nasm(table);
+
+        REG_EBP.colorRegister(Nasm.REG_EBP);
+        REG_ESP.colorRegister(Nasm.REG_ESP);
+        REG_EAX.colorRegister(Nasm.REG_EAX);
+        REG_EBX.colorRegister(Nasm.REG_EBX);
+
+        nasm.ajouteInst(new NasmCall(null, new NasmLabel("main"), ""));
+        nasm.ajouteInst(new NasmMov(null, REG_EBX, new NasmConstant(0), " valeur de retour du programme"));
+        nasm.ajouteInst(new NasmMov(null, REG_EAX, new NasmConstant(1), ""));
+        nasm.ajouteInst(new NasmInt(null, ""));
+
+        for(C3aInst inst : c3a.listeInst) {
+            inst.accept(this);
+        }
     }
 
     public Nasm getNasm() {
@@ -184,10 +203,30 @@ public class C3a2nasm implements C3aVisitor<NasmOperand> {
 
     @Override
     public NasmOperand visit(C3aVar oper) {
-        if(oper.item.portee == table) {
+        /*if(oper.item.portee == table) {
             return new NasmLabel(oper.item.identif);
         } else {
             return new NasmAddress(REG_EBP, oper.item.isParam ? '+' : '-', new NasmConstant(oper.item.adresse));
+        }*/
+
+        if(oper.item.portee == table){
+            //Global var found
+            if( oper.index == null){// check if this is a simple var (oper.index == null)
+
+            }
+            else{ // or an array
+
+            }
+        }
+
+        String varName = oper.item.identif;
+        if(table.getVar(varName) != null){
+            return new NasmLabel(varName);
+        } else {
+            char direction = oper.item.isParam ? '+' : '-';
+            int adr = currentNbLocalVar - oper.item.adresse;
+            NasmConstant offset = new NasmConstant(adr);
+            return new NasmAddress(REG_EBP, direction, offset);
         }
     }
 

@@ -6,7 +6,7 @@ import sa.*;
 import ts.*;
 import c3a.*;
 import nasm.*;
-//import fg.*;
+import fg.*;
 
 public class Compiler
 {
@@ -65,7 +65,7 @@ public class Compiler
 	    System.out.println("[PRINT PRE NASM] ");
 	    nasm.affichePre(baseName);
 
-      /*
+
 	    System.out.print("[BUILD FG] ");
 	    Fg fg = new Fg(nasm);
 	    System.out.print("[PRINT FG] ");
@@ -74,7 +74,7 @@ public class Compiler
 	    System.out.println("[SOLVE FG]");
 	    FgSolution fgSolution = new FgSolution(nasm, fg);
 	    fgSolution.affiche(baseName);
-      */
+
 	}
 	catch(Exception e){
 	    System.out.println(e.getMessage());

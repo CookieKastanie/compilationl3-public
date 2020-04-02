@@ -90,20 +90,20 @@ public class Fg implements NasmVisitor<Void> {
     }
 
     public Void visit(NasmJe inst) {
-        edgeToNext(inst);
         edgeToLabel(inst);
+        edgeToNext(inst);
         return null;
     }
 
     public Void visit(NasmJle inst) {
-        edgeToNext(inst);
         edgeToLabel(inst);
+        edgeToNext(inst);
         return null;
     }
 
     public Void visit(NasmJne inst) {
-        edgeToNext(inst);
         edgeToLabel(inst);
+        edgeToNext(inst);
         return null;
     }
 
@@ -128,14 +128,14 @@ public class Fg implements NasmVisitor<Void> {
     }
 
     public Void visit(NasmJge inst) {
-        edgeToNext(inst);
         edgeToLabel(inst);
+        edgeToNext(inst);
         return null;
     }
 
     public Void visit(NasmJl inst) {
-        edgeToNext(inst);
         edgeToLabel(inst);
+        edgeToNext(inst);
         return null;
     }
 
@@ -165,8 +165,8 @@ public class Fg implements NasmVisitor<Void> {
     }
 
     public Void visit(NasmJg inst) {
-        edgeToNext(inst);
         edgeToLabel(inst);
+        edgeToNext(inst);
         return null;
     }
 

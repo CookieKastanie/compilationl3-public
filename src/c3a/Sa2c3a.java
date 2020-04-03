@@ -7,7 +7,7 @@ public class Sa2c3a extends SaDepthFirstVisitor<C3aOperand> {
 
     private C3a c3a;
 
-    public Sa2c3a(SaNode root, Ts table) {
+    public Sa2c3a(SaNode root) {
         c3a = new C3a();
 
         root.accept(this);

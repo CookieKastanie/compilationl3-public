@@ -23,11 +23,6 @@ public class Ig {
         this.regNb = this.nasm.getTempCounter();
         this.int2Node = new Node[regNb];
         this.build();
-
-        this.build();
-        colorGraph = new ColorGraph(graph, regNb, getPrecoloredTemporaries());
-
-        allocateRegisters();
     }
 
     // Algorithm 1
@@ -38,7 +33,7 @@ public class Ig {
             IntSet in = fgs.in.get(inst);
             IntSet out = fgs.out.get(inst);
 
-            for(int r = 0 ; r < regNb; ++r) {
+            for(int r = 0; r < regNb; ++r) {
                 //in
                 if(in.isMember(r)) {
                     for(int rp = 0 ; rp < regNb; ++rp) {
@@ -50,7 +45,7 @@ public class Ig {
 
                 //out
                 if(out.isMember(r)) {
-                    for(int rp = 0 ; rp < regNb; ++rp) {
+                    for(int rp = 0; rp < regNb; ++rp) {
                         if(out.isMember(rp) && r != rp) {
                             graph.addNOEdge(int2Node[r], int2Node[rp]);
                         }
@@ -64,33 +59,35 @@ public class Ig {
         int[] colors = new int[regNb];
 
         for(NasmInst inst : nasm.listeInst) {
-            if(inst.source != null) {
-
+            if(inst.source != null && inst.source.isGeneralRegister()) {
+                NasmRegister reg = (NasmRegister)inst.source;
+                colors[reg.val] = reg.color;
             }
-            colors[(NasmOperand) inst.source];
+
+            if(inst.destination != null && inst.destination.isGeneralRegister()) {
+                NasmRegister reg = (NasmRegister)inst.destination;
+                colors[reg.val] = reg.color;
+            }
         }
 
         return colors;
     }
 
-    private int getColor(NasmOperand ope) {
-        if(ope.isGeneralRegister()) return ((NasmRegister) ope).color;
+    public void allocateRegisters() {
+        ColorGraph colorGraph = new ColorGraph(graph, 4, getPrecoloredTemporaries());
+        int[] colors = colorGraph.couleur;
 
-        if(ope instanceof NasmAddress) {
-            NasmAddress address = (NasmAddress) ope;
-
-            if (address.base.isGeneralRegister()) {
-                return ((NasmRegister) address.base).color;
+        for(NasmInst inst : nasm.listeInst) {
+            if(inst.source != null && inst.source.isGeneralRegister()) {
+                NasmRegister reg = (NasmRegister)inst.source;
+                reg.colorRegister(colors[reg.val]);
             }
 
-            if (address.offset != null && address.offset.isGeneralRegister()) {
-                return ((NasmRegister) address.offset).color;
+            if(inst.destination != null && inst.destination.isGeneralRegister()) {
+                NasmRegister reg = (NasmRegister)inst.destination;
+                reg.colorRegister(colors[reg.val]);
             }
         }
-    }
-
-
-    public void allocateRegisters() {
     }
 
 

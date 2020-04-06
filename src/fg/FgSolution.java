@@ -22,13 +22,13 @@ public class FgSolution {
     public FgSolution(Nasm nasm, Fg fg) {
         this.nasm = nasm;
         this.fg = fg;
-        this.use = new HashMap();
-        this.def = new HashMap();
-        this.in = new HashMap();
-        this.out = new HashMap();
+        this.use = new HashMap<NasmInst, IntSet>();
+        this.def = new HashMap<NasmInst, IntSet>();
+        this.in = new HashMap<NasmInst, IntSet>();
+        this.out = new HashMap<NasmInst, IntSet>();
 
-        this.inTemp = new HashMap();
-        this.outTemp = new HashMap();
+        this.inTemp = new HashMap<NasmInst, IntSet>();
+        this.outTemp = new HashMap<NasmInst, IntSet>();
 
         calc();
     }

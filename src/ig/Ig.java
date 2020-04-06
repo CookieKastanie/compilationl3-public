@@ -55,25 +55,44 @@ public class Ig {
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////
+
     public int[] getPrecoloredTemporaries() {
         int[] colors = new int[regNb];
 
         for(NasmInst inst : nasm.listeInst) {
-            // TODO : registres dans base et offset
-            if(inst.source != null && inst.source.isGeneralRegister()) {
-                NasmRegister reg = (NasmRegister)inst.source;
-                colors[reg.val] = reg.color;
+            if(inst.source != null) {
+                addColor(inst.source, colors);
             }
 
-            // TODO : registres dans base et offset
-            if(inst.destination != null && inst.destination.isGeneralRegister()) {
-                NasmRegister reg = (NasmRegister)inst.destination;
-                colors[reg.val] = reg.color;
+            if(inst.destination != null) {
+                addColor(inst.destination, colors);
             }
         }
 
         return colors;
     }
+
+    private void addColor(NasmOperand oper, int[] colors) {
+        if(oper.isGeneralRegister()) {
+            NasmRegister reg = (NasmRegister) oper;
+            colors[reg.val] = reg.color;
+        }
+
+        if(oper instanceof NasmAddress) {
+            NasmAddress adr = (NasmAddress) oper;
+
+            if(adr.base.isGeneralRegister()) {
+                colors[((NasmRegister) adr.base).val] = ((NasmRegister) adr.base).color;
+            }
+
+            if(adr.offset != null && adr.offset.isGeneralRegister()) {
+                colors[((NasmRegister) adr.offset).val] = ((NasmRegister) adr.offset).color;
+            }
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
 
     public void allocateRegisters(int nbReg) {
         ColorGraph colorGraph = new ColorGraph(graph, nbReg, getPrecoloredTemporaries());
@@ -81,20 +100,36 @@ public class Ig {
         int[] colors = colorGraph.couleur;
 
         for(NasmInst inst : nasm.listeInst) {
-            // TODO : registres dans base et offset
-            if(inst.source != null && inst.source.isGeneralRegister()) {
-                NasmRegister reg = (NasmRegister)inst.source;
-                reg.colorRegister(colors[reg.val]);
+            if(inst.source != null) {
+                setColor(inst.source, colors);
             }
 
-            // TODO : registres dans base et offset
-            if(inst.destination != null && inst.destination.isGeneralRegister()) {
-                NasmRegister reg = (NasmRegister)inst.destination;
-                reg.colorRegister(colors[reg.val]);
+            if(inst.destination != null) {
+                setColor(inst.destination, colors);
             }
         }
     }
 
+    private void setColor(NasmOperand oper, int[] colors) {
+        if(oper.isGeneralRegister()) {
+            NasmRegister reg = (NasmRegister) oper;
+            reg.colorRegister(colors[reg.val]);
+        }
+
+        if(oper instanceof NasmAddress) {
+            NasmAddress adr = (NasmAddress) oper;
+
+            if(adr.base.isGeneralRegister()) {
+                ((NasmRegister) adr.base).colorRegister(colors[((NasmRegister) adr.base).val]);
+            }
+
+            if(adr.offset != null && adr.offset.isGeneralRegister()) {
+                ((NasmRegister) adr.offset).colorRegister(colors[((NasmRegister) adr.offset).val]);
+            }
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
 
     public void affiche(String baseFileName) {
         String fileName;

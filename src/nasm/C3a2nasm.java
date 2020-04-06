@@ -242,8 +242,16 @@ public class C3a2nasm implements C3aVisitor<NasmOperand> {
             if (oper.item.getTaille() <= 1) {
                 return new NasmAddress(identif);
             } else {
-                NasmConstant offset = new NasmConstant(((C3aConstant) oper.index).val);
-                return new NasmAddress(identif, '+', offset);
+                if(oper.index instanceof C3aConstant) {
+                    NasmConstant offset = new NasmConstant(((C3aConstant) oper.index).val);
+                    return new NasmAddress(identif, '+', offset);
+                } else if(oper.index instanceof C3aTemp){
+                    NasmRegister offset = new NasmRegister(((C3aTemp) oper.index).num);
+                    return new NasmAddress(identif, '+', offset);
+                } else {
+                    NasmAddress offset = (NasmAddress) oper.index.accept(this);
+                    return new NasmAddress(identif, '+', offset);
+                }
             }
         } else {
             if (oper.item.isParam) {

@@ -352,6 +352,15 @@ public class Sa2c3a extends SaDepthFirstVisitor<C3aOperand> {
 
     @Override
     public C3aOperand visit(SaVarIndicee node) {
-        return new C3aVar(node.tsItem, node.getIndice().accept(this));
+        // return new C3aVar(node.tsItem, node.getIndice().accept(this));
+
+        C3aOperand index = node.getIndice().accept(this);
+        if(index instanceof C3aVar) {
+            C3aTemp temp = c3a.newTemp();
+            c3a.ajouteInst(new C3aInstAffect(index, temp, ""));
+            return new C3aVar(node.tsItem, temp);
+        } else {
+            return new C3aVar(node.tsItem, index);
+        }
     }
 }

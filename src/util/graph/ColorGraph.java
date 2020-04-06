@@ -113,14 +113,6 @@ public class ColorGraph {
         boolean modif = true;
         while(pile.size() != n && modif) {
             modif = false;
-            /*for(Node node : int2Node) {
-                int s = node.mykey;
-                if (!enleves.isMember(s) && nbVoisins(s) < K && couleur[s] == NOCOLOR) {
-                    pile.push(s);
-                    enleves.add(s);
-                    modif = true;
-                }
-            }*/
             for(int s = 0; s < R; ++s) {
                 if (!enleves.isMember(s) && nbVoisins(s) < K && couleur[s] == NOCOLOR) {
                     pile.push(s);
@@ -146,10 +138,8 @@ public class ColorGraph {
     }
 
     private int choisisSommet() {
-        for (int i = 0; i < /*enleves.getSize()*/R; ++i) {
-            if (/*!enleves.isMember(i) && couleur[i] == NOCOLOR*/ !pile.contains(i)){
-                return i;
-            }
+        for(int i = 0; i < R; ++i) {
+            if(!pile.contains(i)) return i;
         }
 
         return -1;

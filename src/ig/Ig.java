@@ -59,11 +59,13 @@ public class Ig {
         int[] colors = new int[regNb];
 
         for(NasmInst inst : nasm.listeInst) {
+            // TODO : registres dans base et offset
             if(inst.source != null && inst.source.isGeneralRegister()) {
                 NasmRegister reg = (NasmRegister)inst.source;
                 colors[reg.val] = reg.color;
             }
 
+            // TODO : registres dans base et offset
             if(inst.destination != null && inst.destination.isGeneralRegister()) {
                 NasmRegister reg = (NasmRegister)inst.destination;
                 colors[reg.val] = reg.color;
@@ -73,16 +75,19 @@ public class Ig {
         return colors;
     }
 
-    public void allocateRegisters() {
-        ColorGraph colorGraph = new ColorGraph(graph, 4, getPrecoloredTemporaries());
+    public void allocateRegisters(int nbReg) {
+        ColorGraph colorGraph = new ColorGraph(graph, nbReg, getPrecoloredTemporaries());
+        colorGraph.coloration();
         int[] colors = colorGraph.couleur;
 
         for(NasmInst inst : nasm.listeInst) {
+            // TODO : registres dans base et offset
             if(inst.source != null && inst.source.isGeneralRegister()) {
                 NasmRegister reg = (NasmRegister)inst.source;
                 reg.colorRegister(colors[reg.val]);
             }
 
+            // TODO : registres dans base et offset
             if(inst.destination != null && inst.destination.isGeneralRegister()) {
                 NasmRegister reg = (NasmRegister)inst.destination;
                 reg.colorRegister(colors[reg.val]);

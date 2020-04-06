@@ -91,11 +91,8 @@ public class FgSolution {
                 outTemp.replace(inst, out.get(inst).copy());
 
                 in.replace(inst, out.get(inst).copy().minus(def.get(inst)).union(use.get(inst)));
-
-                NodeList pred = fg.inst2Node.get(inst).pred();
-                while(pred != null) {
-                    out.get(fg.node2Inst.get(pred.head)).union(in.get(inst));
-                    pred = pred.tail;
+                for(NodeList list = fg.inst2Node.get(inst).pred(); list != null; list = list.tail) {
+                    out.get(fg.node2Inst.get(list.head)).union(in.get(inst));
                 }
             }
 
